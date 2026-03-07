@@ -10,6 +10,7 @@ import { BrowserRouter } from "react-router-dom";
 import { useAccountStore } from "./stores/account";
 import {
   getCategories,
+  getContext,
   getSettings,
   getTransactions,
   listAccountsWithDetails,
@@ -22,12 +23,13 @@ import { useBudgetStore } from "./stores/budget";
 import { useTileStore } from "./stores/tiles";
 import { useSettingStore } from "./stores/setting";
 import { useCategoryStore } from "./stores/category";
+import { useContextStore } from "./stores/context";
 
 Promise.all([
   listAccountsWithDetails().then(async (accounts) => {
     useAccountStore.setState({
       accounts: new Map(
-        accounts.map((account) => [account.id.id.String, account])
+        accounts.map((account) => [account.id.id.String, account]),
       ),
     });
 
@@ -35,7 +37,7 @@ Promise.all([
 
     for (const [id, account] of useAccountStore.getState().accounts) {
       await getTransactions(account.id, account.filter).then((t) =>
-        transactions.set(id, t)
+        transactions.set(id, t),
       );
     }
 
@@ -46,9 +48,10 @@ Promise.all([
   listBudgets().then((budgets) => useBudgetStore.setState({ budgets })),
   listTiles().then((tiles) => useTileStore.setState({ tiles })),
   getSettings().then((settings) => useSettingStore.setState({ settings })),
+  getContext().then((context) => useContextStore.setState({ context })),
   getCategories().then((categories) => {
     const groups = Array.from(categories.values()).filter(
-      (category) => !category.parent
+      (category) => !category.parent,
     );
     const all = Array.from(categories.values()).map((category) => {
       if (!category.parent) category.parent = category.id;
@@ -57,10 +60,10 @@ Promise.all([
 
     useCategoryStore.setState({
       categories: new Map(
-        all.map((category) => [category.id.id.String, category])
+        all.map((category) => [category.id.id.String, category]),
       ),
       categoryGroups: new Map(
-        groups.map((category) => [category.id.id.String, category])
+        groups.map((category) => [category.id.id.String, category]),
       ),
     });
   }),
@@ -70,6 +73,6 @@ Promise.all([
       <BrowserRouter basename="/">
         <App />
       </BrowserRouter>
-    </React.StrictMode>
-  )
+    </React.StrictMode>,
+  ),
 );
