@@ -1,4 +1,4 @@
-use thunes_cli::Record;
+use thunes_cli::{context::Context, Record};
 
 pub async fn setup() -> tauri::App<tauri::test::MockRuntime> {
     use tauri::Manager;
@@ -28,6 +28,13 @@ pub async fn setup() -> tauri::App<tauri::test::MockRuntime> {
         .await;
 
     result.expect("failed to create default categories");
+
+    let result: Result<Option<Record>, surrealdb::Error> = db
+        .insert(("context", "main"))
+        .content(Context::default())
+        .await;
+
+    result.expect("failed to create context");
 
     app.manage(tokio::sync::Mutex::new(db));
 

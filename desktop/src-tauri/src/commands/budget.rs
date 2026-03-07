@@ -9,6 +9,7 @@ use thunes_cli::budget::expenses::ReadExpensesResult;
 use thunes_cli::budget::partition::CreatePartitionOptions;
 use thunes_cli::budget::partition::Partition;
 use thunes_cli::budget::Budget;
+
 #[tauri::command]
 #[tracing::instrument(skip(database), ret(level = tracing::Level::DEBUG))]
 pub async fn list_budgets(

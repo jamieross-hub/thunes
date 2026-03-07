@@ -10,7 +10,13 @@ import {
   SnackbarCloseReason,
   TextField,
 } from "@mui/material";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Transactions from "./account/Transactions";
 import Summary from "./account/Summary";
 import { SyntheticEvent } from "react";
@@ -25,6 +31,7 @@ import { Item } from "../components/form/CustomSelector";
 import CustomSelector from "../components/form/CustomSelector";
 import { useAccountStore } from "../stores/account";
 import { useSettingStore } from "../stores/setting";
+import { useContextStore } from "../stores/context";
 
 function AddAccountDialog({
   open,
@@ -119,6 +126,7 @@ export default function () {
   const [openFailure, setOpenFailure] = useState("");
   const accountStore = useAccountStore();
   const settingsStore = useSettingStore();
+  const contextStore = useContextStore();
 
   const handleSnackbarClose = (
     _event?: SyntheticEvent | Event,
@@ -133,8 +141,18 @@ export default function () {
 
   const handleSelectAccount = async (account: AccountIdentifiers) => {
     settingsStore.open(account.id.id.String, "account");
+    contextStore.update({
+      ...contextStore.context,
+      last_opened_account: account.id,
+    });
     navigate(account);
   };
+
+  useEffect(() => {
+    if (!id && contextStore.context.last_opened_account) {
+      navigate({ name: "", id: contextStore.context.last_opened_account });
+    }
+  });
 
   return (
     <Page

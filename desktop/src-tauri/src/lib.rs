@@ -1,5 +1,6 @@
 use tauri::{App, Manager};
 use thunes_cli::{
+    context::Context,
     migrations::{m1_account_filter::AccountFilterMigration, run_migrations},
     settings::Settings,
     Record,
@@ -9,6 +10,7 @@ pub mod commands {
     pub mod account;
     pub mod budget;
     pub mod categories;
+    pub mod context;
     pub mod currency;
     pub mod portfolio;
     pub mod settings;
@@ -97,6 +99,23 @@ fn setup(app: &mut App) -> std::result::Result<(), Box<dyn std::error::Error>> {
             }
         }
 
+        // FIXME: move db seeding to an install script.
+        // Context.
+        {
+            let result: Result<Option<Record>, surrealdb::Error> = db
+                .insert(("context", "main"))
+                .content(Context::default())
+                .await;
+
+            match result {
+                Ok(_) | Err(surrealdb::Error::Db(surrealdb::error::Db::RecordExists { .. })) => {}
+                _ => {
+                    tracing::error!("failed to initialize app context");
+                    return Err("failed to initialize app context".to_string());
+                }
+            }
+        }
+
         Ok(db)
     }))??;
 
@@ -154,6 +173,8 @@ pub fn run() {
             commands::portfolio::list_tiles,
             commands::portfolio::remove_tile,
             commands::portfolio::update_tile,
+            commands::context::update_context,
+            commands::context::get_context,
         ])
         .setup(setup)
         .run(tauri::generate_context!())

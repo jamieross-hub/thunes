@@ -26,6 +26,7 @@ import { PortfolioTile } from "../../../cli/bindings/PortfolioTile";
 import { ReadTransactionOptions } from "../../../cli/bindings/ReadTransactionOptions";
 import { ReadCategoryOptions } from "../../../cli/bindings/ReadCategoryOptions";
 import { ReadCategoryResult } from "../../../cli/bindings/ReadCategoryResult";
+import { Context } from "../../../cli/bindings/Context";
 
 // TODO: could this be automated ?
 
@@ -157,3 +158,8 @@ export const updateTile = (tile: PortfolioTile): Promise<void> =>
   invoke("update_tile", { tile });
 export const removeTile = (id: RecordId): Promise<void> =>
   invoke("remove_tile", { id });
+
+// Context.
+export const getContext = (): Promise<Context> => invoke("get_context");
+export const updateContext = (context: Context): Promise<void> =>
+  invoke("update_context", { context });
