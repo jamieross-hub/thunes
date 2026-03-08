@@ -62,6 +62,7 @@ import { useAccountStore } from "../stores/account";
 import { useSettingStore } from "../stores/setting";
 import { ExpensesPeriod } from "../../../cli/bindings/ExpensesPeriod";
 import dayjs from "dayjs";
+import { useContextStore } from "../stores/context";
 
 function AddBudgetDialog({
   open,
@@ -456,6 +457,7 @@ export default function () {
   const navigate = useBudgetNavigate();
   const store = useBudgetStore();
   const settingsStore = useSettingStore();
+  const contextStore = useContextStore();
 
   const [editBudget, setEditBudget] = useState<boolean>(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -474,8 +476,18 @@ export default function () {
 
   const handleSelectBudget = async (budget: BudgetIdentifiers) => {
     settingsStore.open(budget.id.id.String, "budget");
+    contextStore.update({
+      ...contextStore.context,
+      last_opened_budget: budget.id,
+    });
     navigate(budget);
   };
+
+  useEffect(() => {
+    if (!id && contextStore.context.last_opened_budget) {
+      navigate({ name: "", id: contextStore.context.last_opened_budget });
+    }
+  });
 
   return (
     <Page

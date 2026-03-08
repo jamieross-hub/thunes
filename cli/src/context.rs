@@ -8,6 +8,8 @@ use crate::Error;
 pub struct Context {
     #[ts(type = "{ tb: string, id: { String: string }}", optional)]
     pub last_opened_account: Option<surrealdb::RecordId>,
+    #[ts(type = "{ tb: string, id: { String: string }}", optional)]
+    pub last_opened_budget: Option<surrealdb::RecordId>,
 }
 
 pub async fn read(db: &Surreal<Db>) -> Result<Context, Error> {
