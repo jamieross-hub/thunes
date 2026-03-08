@@ -47,6 +47,7 @@ mod tests {
             app.state(),
             Context {
                 last_opened_account: Some(account.id.clone()),
+                last_opened_budget: None,
             },
         )
         .await
@@ -56,5 +57,6 @@ mod tests {
             .expect("failed to get context");
 
         assert_eq!(context.last_opened_account, Some(account.id));
+        assert_eq!(context.last_opened_budget, None);
     }
 }

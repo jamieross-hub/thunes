@@ -11,6 +11,7 @@ interface ContextState {
 
 export const useContextStore = create<ContextState>((set) => ({
   context: { last_opened_account: undefined },
+
   update: async (Context: Context) => {
     await updateContext(Context);
     const updated = await getContext();
