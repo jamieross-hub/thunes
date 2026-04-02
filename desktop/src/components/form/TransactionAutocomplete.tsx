@@ -39,7 +39,7 @@ export default function ({
         amount: parseInt(value!.amount),
       }}
       options={Array.from(
-        transactionStore.transactions.get(account.id.id.String) || []
+        transactionStore.transactions.get(account.id.id.String) || [],
       )}
       getOptionLabel={(option) => option.description}
       getOptionKey={(option) => option.id.id.String}
@@ -48,6 +48,7 @@ export default function ({
         if (reason === "input") {
           onChange(
             {
+              account: EMPTY_RECORD_ID,
               description: value,
               amount: "0",
               category: EMPTY_RECORD_ID,
@@ -55,7 +56,7 @@ export default function ({
               id: EMPTY_RECORD_ID,
               tags: [],
             },
-            "createOption"
+            "createOption",
           );
         }
       }}
@@ -66,7 +67,7 @@ export default function ({
             amount: value.amount.toString(),
             date: dayjs(value.date),
           },
-          reason
+          reason,
         )
       }
     />
