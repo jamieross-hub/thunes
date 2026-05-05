@@ -2,7 +2,7 @@
 
 Thunes is a simple desktop app that you can use to manage your expenses and budgets.
 Thunes does not synchronise your bank accounts, you provide every transaction manually.
-
+ 
 <!-- TODO: See my blog to see why I built it this way -->
 
 It is mainly built for my needs, but I figured it would be interesting to share the source code anyways.
